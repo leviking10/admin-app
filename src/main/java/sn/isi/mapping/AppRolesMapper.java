@@ -1,11 +1,11 @@
 package sn.isi.mapping;
 
 import org.mapstruct.Mapper;
-import sn.isi.dto.AppRoles;
+import sn.isi.dto.AppRolesDto;
 import sn.isi.entities.AppRolesEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AppRolesMapper {
-    AppRoles toAppRoles(AppRolesEntity appRolesEntity);
-    AppRolesEntity fromAppRoles(AppRoles appRoles);
+    AppRolesDto entityToDto(AppRolesEntity appRolesEntity);
+    AppRolesEntity dtoToEntity(AppRolesDto appRolesDto);
 }

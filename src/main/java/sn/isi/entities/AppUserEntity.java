@@ -1,14 +1,14 @@
 package sn.isi.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Table(name = "appuser")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppUserEntity {

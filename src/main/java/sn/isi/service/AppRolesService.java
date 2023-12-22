@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.isi.doa.IAppRolesRepository;
-import sn.isi.dto.AppRoles;
+import sn.isi.dto.AppRolesDto;
 import sn.isi.exception.EntityNotFoundException;
 import sn.isi.exception.RequestException;
 import sn.isi.mapping.AppRolesMapper;
@@ -17,9 +17,9 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class AppRolesService {
-    private IAppRolesRepository iAppRolesRepository;
-    private AppRolesMapper appRolesMapper;
-    MessageSource messageSource;
+    private final IAppRolesRepository iAppRolesRepository;
+    private final AppRolesMapper appRolesMapper;
+    private final MessageSource messageSource;
 
     public AppRolesService(IAppRolesRepository iAppRolesRepository, AppRolesMapper appRolesMapper, MessageSource messageSource) {
         this.iAppRolesRepository = iAppRolesRepository;
@@ -28,34 +28,34 @@ public class AppRolesService {
     }
 
     @Transactional(readOnly = true)
-    public List<AppRoles>  getAppRoles() {
+    public List<AppRolesDto> getAppRoles() {
         return StreamSupport.stream(iAppRolesRepository.findAll().spliterator(), false)
-                .map(appRolesMapper::toAppRoles)
-                .collect(Collectors.toList());
+            .map(appRolesMapper::entityToDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public AppRoles getAppRole(int id) {
-        return appRolesMapper.toAppRoles(iAppRolesRepository.findById(id)
-                .orElseThrow(() ->
+    public AppRolesDto getAppRole(int id) {
+        return appRolesMapper.entityToDto(iAppRolesRepository.findById(id)
+            .orElseThrow(() ->
                 new EntityNotFoundException(messageSource.getMessage("role.notfound", new Object[]{id},
-                        Locale.getDefault()))));
+                    Locale.getDefault()))));
     }
 
     @Transactional
-    public AppRoles createAppRoles(AppRoles appRoles) {
-        return appRolesMapper.toAppRoles(iAppRolesRepository.save(appRolesMapper.fromAppRoles(appRoles)));
+    public AppRolesDto createAppRoles(AppRolesDto appRolesDto) {
+        return appRolesMapper.entityToDto(iAppRolesRepository.save(appRolesMapper.dtoToEntity(appRolesDto)));
     }
 
     @Transactional
-    public AppRoles updateAppRoles(int id, AppRoles appRoles) {
+    public AppRolesDto updateAppRoles(int id, AppRolesDto appRolesDto) {
         return iAppRolesRepository.findById(id)
-                .map(entity -> {
-                    appRoles.setId(id);
-                    return appRolesMapper.toAppRoles(
-                            iAppRolesRepository.save(appRolesMapper.fromAppRoles(appRoles)));
-                }).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("role.notfound", new Object[]{id},
-                        Locale.getDefault())));
+            .map(entity -> {
+                appRolesDto.setId(id);
+                return appRolesMapper.entityToDto(
+                    iAppRolesRepository.save(appRolesMapper.dtoToEntity(appRolesDto)));
+            }).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("role.notfound", new Object[]{id},
+                Locale.getDefault())));
     }
 
     @Transactional
@@ -64,8 +64,8 @@ public class AppRolesService {
             iAppRolesRepository.deleteById(id);
         } catch (Exception e) {
             throw new RequestException(messageSource.getMessage("role.errordeletion", new Object[]{id},
-                    Locale.getDefault()),
-                    HttpStatus.CONFLICT);
+                Locale.getDefault()),
+                HttpStatus.CONFLICT);
         }
     }
 }

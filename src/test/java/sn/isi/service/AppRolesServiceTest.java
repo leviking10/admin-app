@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.runner.RunWith;
-import sn.isi.dto.AppRoles;
+import sn.isi.dto.AppRolesDto;
 
 import java.util.List;
 
@@ -19,39 +19,39 @@ class AppRolesServiceTest {
 
     @Test
     void getAppRoles() {
-        List<AppRoles> appRolesList =
+        List<AppRolesDto> appRolesDtoList =
                 appRolesService.getAppRoles();
 
-        Assertions.assertEquals(1, appRolesList.size());
+        Assertions.assertEquals(1, appRolesDtoList.size());
     }
 
     @Test
     void getAppRole() {
-        AppRoles appRoles = appRolesService.getAppRole(1);
+        AppRolesDto appRolesDto = appRolesService.getAppRole(1);
 
-        Assertions.assertNotNull(appRoles);
+        Assertions.assertNotNull(appRolesDto);
     }
 
     @Test
     void createAppRoles() {
 
-        AppRoles appRoles = new AppRoles();
-        appRoles.setNom("ROLE_USER");
+        AppRolesDto appRolesDto = new AppRolesDto();
+        appRolesDto.setNom("ROLE_USER");
 
-        AppRoles appRolesSave = appRolesService.createAppRoles(appRoles);
+        AppRolesDto appRolesDtoSave = appRolesService.createAppRoles(appRolesDto);
 
-        Assertions.assertNotNull(appRolesSave);
+        Assertions.assertNotNull(appRolesDtoSave);
         //Assertions.assertEquals(appRoles.getNom(), appRolesSave.getNom());
     }
 
     @Test
     void updateAppRoles() {
-        AppRoles appRoles = new AppRoles();
-        appRoles.setNom("ROLE_TECH");
+        AppRolesDto appRolesDto = new AppRolesDto();
+        appRolesDto.setNom("ROLE_TECH");
 
-        AppRoles appRolesSave = appRolesService.updateAppRoles(3, appRoles);
+        AppRolesDto appRolesDtoSave = appRolesService.updateAppRoles(3, appRolesDto);
 
-        Assertions.assertEquals("ROLE_TECH", appRolesSave.getNom());
+        Assertions.assertEquals("ROLE_TECH", appRolesDtoSave.getNom());
 
     }
 

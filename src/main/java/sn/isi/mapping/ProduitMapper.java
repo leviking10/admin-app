@@ -1,11 +1,11 @@
 package sn.isi.mapping;
 
 import org.mapstruct.Mapper;
-import sn.isi.dto.Produit;
+import sn.isi.dto.ProduitDto;
 import sn.isi.entities.ProduitEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ProduitMapper {
-    Produit toProduit(ProduitEntity produitEntity);
-    ProduitEntity fromProduit(Produit produit);
+    ProduitDto entityToDto(ProduitEntity produitEntity);
+    ProduitEntity dtoToEntity(ProduitDto produitDto);
 }

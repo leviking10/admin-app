@@ -1,13 +1,13 @@
 package sn.isi.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Table(name="produit")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProduitEntity {

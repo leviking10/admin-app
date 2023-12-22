@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Liste des Produits</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-6">
+  <h2>Liste des Produits</h2>
+  <a class="btn btn-primary mb-3" th:href="@{/produit/new}">Nouveau Produit</a>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Quantité en Stock</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="produit : ${produits}">
+      <td th:text="${produit.id}"></td>
+      <td th:text="${produit.nom}"></td>
+      <td th:text="${produit.qtStock}"></td>
+      <td>
+        <a class="btn btn-success" th:href="@{/produit/edit/{id}(id=${produit.id})}">Modifier</a>
+        <a class="btn btn-danger" th:href="@{/produit/delete/{id}(id=${produit.id})}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

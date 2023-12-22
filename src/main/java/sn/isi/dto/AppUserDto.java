@@ -1,14 +1,14 @@
 package sn.isi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUser {
+public class AppUserDto {
     private int id;
     @NotNull(message = "Le nom ne doit pas etre null")
     private String nom;

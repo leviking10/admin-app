@@ -20,5 +20,5 @@ public class AppUserDto {
     private String password;
     @NotNull
     private int etat;
-
+    private Integer approleId;
 }

@@ -18,7 +18,7 @@ public class LoggingAspect {
     /**
      * Pointcut that matches Web REST endpoints.
      */
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    @Pointcut("within(sn.isi..*)"+"|| within(sn.isi.controller..*)")
     public void springBeanPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }

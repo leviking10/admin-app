@@ -24,8 +24,9 @@ public class AppUserEntity {
     @Column(nullable = false, length = 200)
     private String password;
     private int etat;
-    @ManyToMany
-    private List<AppRolesEntity> appRoleEntities;
+    @ManyToOne
+    @JoinColumn(name = "approle_id")
+    private AppRolesEntity appRoleEntity;
     @OneToMany(mappedBy = "appUserEntity")
     private List<ProduitEntity> produitEntities;
 }

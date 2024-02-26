@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sn.isi.dto.AppUserDto;
+import sn.isi.service.AppRolesService;
 import sn.isi.service.AppUserService;
 
 @Controller
@@ -13,9 +14,11 @@ import sn.isi.service.AppUserService;
 public class AppUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppUserController.class);
     private final AppUserService appUserService;
+    private  final AppRolesService roleService;
 
-    public AppUserController(AppUserService appUserService) {
+    public AppUserController(AppUserService appUserService, AppRolesService roleService) {
         this.appUserService = appUserService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/")
@@ -29,6 +32,7 @@ public class AppUserController {
     public String showNewUserForm(Model model) {
         AppUserDto newUser = new AppUserDto();
         model.addAttribute("user", newUser);
+        model.addAttribute("roles", roleService.getAppRoles());
         return "appuser/add-appuser";
     }
     @PostMapping("/save")
@@ -41,6 +45,7 @@ public class AppUserController {
     public String showEditUserForm(@PathVariable int id, Model model) {
         AppUserDto userDto = appUserService.getUser(id);
         model.addAttribute("user", userDto);
+        model.addAttribute("roles", roleService.getAppRoles());
         return "appuser/update-appuser";
     }
 

@@ -17,7 +17,7 @@
       <th>Nom</th>
       <th>Prénom</th>
       <th>Email</th>
-      <!-- Autres en-têtes si nécessaire -->
+      <th>Role</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -27,7 +27,7 @@
       <td th:text="${user.nom}"></td>
       <td th:text="${user.prenom}"></td>
       <td th:text="${user.email}"></td>
-      <!-- Autres cellules si nécessaire -->
+      <td th:text="${user.approleId}"></td>
       <td>
         <a class="btn btn-success" th:href="@{/appuser/edit/{id}(id=${user.id})}">Modifier</a>
         <a class="btn btn-danger" th:href="@{/appuser/delete/{id}(id=${user.id})}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a>

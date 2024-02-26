@@ -30,8 +30,13 @@
       <label for="email">Email :</label>
       <input type="email" class="form-control" id="email" name="email" th:field="*{email}" />
     </div>
-
-    <!-- Autres champs si nécessaire -->
+    <div class="form-group">
+      <label for="role">Rôle</label>
+      <select id="role" class="form-control" th:field="*{approleId}">
+        <option value="">Sélectionnez un rôle</option>
+        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.nom}"></option>
+      </select>
+    </div>
     <button type="submit" class="btn btn-primary">Mettre à jour</button>
   </form>
 </div>

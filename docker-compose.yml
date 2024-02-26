@@ -15,7 +15,6 @@ services:
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
 
-
   phpmyadmin-admin-db:
     container_name: container_phpmyadmin-admindb
     image: phpmyadmin/phpmyadmin:latest

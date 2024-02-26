@@ -17,6 +17,4 @@ public class AppRolesEntity {
     private int id;
     @Column(unique = true, nullable = false, length = 100)
     private String nom;
-    @ManyToMany(mappedBy = "appRoleEntities")
-    private List<AppUserEntity> appUserEntity;
 }

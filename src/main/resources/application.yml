@@ -7,9 +7,6 @@ spring:
     username: user
     password: user
     driverClassName: com.mysql.cj.jdbc.Driver
-  application:
-    name: spring-admin
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,9 +15,22 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  application:
+    name: spring-admin
 
+keycloak:
+  realm: Admin-App-realm
+  resource: admin-app-client
+  public-client: true
+  auth-server-url: http://localhost:8090/auth
+  principal-attribute: name
 
 info:
   application:
     name: admin-app
     version: '@project.version@'
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.keycloak: DEBUG

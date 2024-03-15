@@ -1,34 +1,79 @@
 version: '3.9'
+
 services:
+  # Service MySQL pour la base de données
   mysql-admin-db:
-    image: mysql:8.0
-    container_name: container_mysql-admin-db
-    environment:
+    image: mysql:8.0 # Utilise l'image MySQL version 8.0
+    container_name: container_mysql-admin-db # Nom personnalisé du conteneur
+    environment: # Variables d'environnement pour la configuration de MySQL
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: adminapp-db
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - 3306:3306
+      - 3306:3306 # Expose le port 3306 pour l'accès à la base de données
     volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      - mysql_data:/var/lib/mysql # Montage du volume pour la persistance des données
+    healthcheck: # Vérification de l'état de santé de MySQL
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "$$MYSQL_USER", "--password=$$MYSQL_PASSWORD"]
+    networks:
+      - admin-network # Connecte ce service au réseau 'admin-network'
 
+  # Service phpMyAdmin pour la gestion de la base de données via une interface web
   phpmyadmin-admin-db:
     container_name: container_phpmyadmin-admindb
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:latest # Utilise la dernière version de phpMyAdmin
     ports:
-      - 8085:80
-    environment:
+      - 8085:80 # Expose le port 8085 sur l'hôte, mappé au port 80 du conteneur
+    environment: # Configuration de l'accès à MySQL pour phpMyAdmin
       MYSQL_ROOT_PASSWORD: root
       PMA_HOST: mysql-admin-db
       PMA_USER: user
       PMA_PASSWORD: user
     depends_on:
-      - mysql-admin-db
-    restart: unless-stopped
+      - mysql-admin-db # Démarre après que le service mysql-admin-db soit prêt
+    restart: unless-stopped # Politique de redémarrage
+    networks:
+      - admin-network # Connecte ce service au réseau 'admin-network'
+
+  # Service Keycloak pour l'authentification et la gestion des autorisations
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak # Utilise l'image Keycloak de JBoss
+    environment: # Variables d'environnement pour la configuration initiale de Keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8090:8080" # Expose le port 8090 sur l'hôte, mappé au port 8080 du conteneur
+    depends_on:
+      - mysql-admin-db # Assure que MySQL est démarré avant Keycloak
+    networks:
+      - admin-network # Connecte ce service au réseau 'admin-network'
+
+  # Service pour l'application Spring Boot
+  admin:
+    container_name: app-admin
+    build: . # Construit l'image de l'application à partir du Dockerfile dans le répertoire courant
+    environment: # Variables d'environnement pour la configuration de l'application
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-admin-db/adminapp-db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: Admin-App-realm
+      KEYCLOAK_RESOURCE: admin-app-client
+      KEYCLOAK_CREDENTIALS_SECRET: yoursecret
+    depends_on:
+      - keycloak # Assure que Keycloak est démarré avant l'application
+      - mysql-admin-db # Assure que MySQL est démarré avant l'application
+    ports:
+      - "8089:8080" # Expose le port 8089 sur l'hôte, mappé au port 8080 du conteneur
+    networks:
+      - admin-network # Connecte ce service au réseau 'admin-network'
+
+networks:
+  admin-network: # Définition du réseau 'admin-network'
+    driver: bridge # Utilise le driver bridge pour le réseau
 
 volumes:
-  mysql_data:
+  mysql_data: # Définition du volume pour la persistance des données MySQL
     driver: local

@@ -2,14 +2,17 @@ package sn.isi.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sn.isi.dto.AppUserDto;
 import sn.isi.service.AppRolesService;
 import sn.isi.service.AppUserService;
-
 @Controller
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/appuser")
 public class AppUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppUserController.class);
@@ -23,13 +26,14 @@ public class AppUserController {
 
     @GetMapping("/")
     public String listAppUsers(Model model) {
-        logger.debug("Affichage de la liste des utilisateurs");
+        logger.info("Affichage de la liste des utilisateurs");
         model.addAttribute("users", appUserService.getAllUsers());
         return "appuser/list-appuser";
     }
-
+    @PostAuthorize("hasAutority('ADMIN')")
     @GetMapping("/new")
     public String showNewUserForm(Model model) {
+        logger.info("Ajout d'un utilisateur");
         AppUserDto newUser = new AppUserDto();
         model.addAttribute("user", newUser);
         model.addAttribute("roles", roleService.getAppRoles());
@@ -37,6 +41,7 @@ public class AppUserController {
     }
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("user") AppUserDto userDto) {
+        logger.info("un utilisateur a ete créé");
         appUserService.createUser(userDto);
         return "redirect:/appuser/";
     }
@@ -60,4 +65,5 @@ public class AppUserController {
         appUserService.deleteUser(id);
         return "redirect:/appuser/";
     }
+
 }

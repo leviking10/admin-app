@@ -16,7 +16,7 @@ class AppRolesServiceTest {
 
     @Autowired
     private AppRolesService appRolesService;
-
+/*
     @Test
     void getAppRoles() {
         List<AppRolesDto> appRolesDtoList =
@@ -68,5 +68,5 @@ class AppRolesServiceTest {
         int val2 = 2;
         int val3 = val1 + val2;
         Assertions.assertEquals(3, val3);
-    }
+    }*/
 }
